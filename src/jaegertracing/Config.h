@@ -68,6 +68,8 @@ class Config {
         const auto baggageRestrictionsNode = configYAML["baggage_restrictions"];
         const auto baggageRestrictions =
             baggage::RestrictionsConfig::parse(baggageRestrictionsNode);
+        const auto tagsNode = configYAML["tags"];
+        const auto tags = parseTags(tagsNode);
         return Config(disabled,
                       traceId128Bit,
                       sampler,
@@ -75,7 +77,7 @@ class Config {
                       headers,
                       baggageRestrictions,
                       serviceName,
-                      std::vector<Tag>(),
+                      tags,
                       propagationFormat);
     }
 
@@ -131,6 +133,7 @@ class Config {
   private:
     static propagation::Format
     parsePropagationFormat(std::string strPropagationFormat);
+    static std::vector<Tag> parseTags(const YAML::Node& node);
 
     bool _disabled;
     bool _traceId128Bit;
